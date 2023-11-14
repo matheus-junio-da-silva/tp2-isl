@@ -1,0 +1,5 @@
+PS C:\iverilog> iverilog tp2/tp2.v tp2/tp2_tb.v
+PS C:\iverilog> vvp .\a.out
+tp2/tp2_tb.v:59: $finish called at 150000 (1ps)
+PS C:\iverilog> iverilog tp2/tp2.v tp2/tp2_tb.v
+PS C:\iverilog> vvp .\a.out
