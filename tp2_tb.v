@@ -41,13 +41,13 @@ module Testbench;
 
     // Aplicando a sequência de teste
     #10 reset = 0;
-    #10 insere = 1; numero = 4'b0001;
+    #10 insere = 1; numero = 4'b0000;
     #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 insere = 1; numero = 4'b0010;
+    #10 insere = 1; numero = 4'b0000;
     #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 insere = 1; numero = 4'b0011;
+    #10 insere = 1; numero = 4'b0000;
     #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 insere = 1; numero = 4'b0100;
+    #10 insere = 1; numero = 4'b0000;
     #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
     #10 insere = 0; numero = 4'b0000;
     #10 fim_jogo = 1;
