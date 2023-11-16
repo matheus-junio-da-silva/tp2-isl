@@ -30,10 +30,8 @@ module Loteria (
   reg [1:0] premio_count;
   reg [4:0] p1_count;
   reg [4:0] p2_count;
-  reg [3:0] last_sorted_number;
+  //reg [3:0] last_sorted_number;
   reg [1:0] consecutivos_count;
-  //reg [1:0] consecutivos3_count;
-  //reg [1:0] consecutivos4_count;
   reg [1:0] rodadas_count;
 
   // Inicialização
@@ -43,28 +41,41 @@ module Loteria (
       premio_count <= 2'b00;
       p1_count <= 5'b00000;
       p2_count <= 5'b00000;
-      last_sorted_number <= 4'b0000;
+      consecutivos_count <= 2'b00;
+      rodadas_count <= 2'b00;
+      //last_sorted_number <= 4'b0000;
     end else begin
       // Lógica da máquina de estados
       case (current_state) // current_state = 3'b000
         IDLE:
           if (insere) begin // insere == 1
-            if (numero == sorteio0) begin
+            if (rodadas_count == 2'b11) begin
+              case (consecutivos_count) // pode ser que seja necessario subtrair 1 de consecutivos_count
+                2'b01:
+                  current_state <= ACERTOU_DOIS_CONSECUTIVOS;
+                2'b10:
+                  current_state <= ACERTOU_TRES_CONSECUTIVOS;
+                2'b11:
+                  current_state <= ACERTOU_QUATRO_CONSECUTIVOS;
+                default:
+                  current_state <= IDLE;
+              endcase
+            end else if (numero == sorteio0) begin
               current_state <= ACERTOU_UM;
             end else begin
               current_state <= IDLE;
             end
-            rodadas_count <= rodadas_count + 2'b01;
+
+            if (rodadas_count != 2'b11) begin
+              rodadas_count <= rodadas_count + 2'b01;
+            end   
+
           end
         ACERTOU_UM:
           if (insere) begin
             if (numero == sorteio1) begin
               current_state <= ACERTOU_DOIS;
               consecutivos_count <= 2'b01;
-            /*
-            end else if (numero == sorteio0) begin
-              current_state <= ACERTOU_UM;
-            */
             end else begin
               current_state <= IDLE;
             end
@@ -75,15 +86,6 @@ module Loteria (
             if (numero == sorteio2) begin
               current_state <= ACERTOU_TRES;
               consecutivos_count <= 2'b10;
-            /*
-            end else if (numero == sorteio1) begin
-              current_state <= ACERTOU_DOIS;
-            
-            end else if (numero == sorteio0) begin
-              current_state <= ACERTOU_UM;
-            end else if (numero == last_sorted_number) begin
-              current_state <= ACERTOU_DOIS_CONSECUTIVOS;
-            */
             end else begin
               current_state <= IDLE;
             end
@@ -92,86 +94,50 @@ module Loteria (
         ACERTOU_TRES:
           if (insere) begin
             if (numero == sorteio3) begin
-              //current_state <= ACERTOU_QUATRO;
-              //current_state <= ACERTOU_QUATRO_CONSECUTIVOS;
               consecutivos_count <= 2'b11;
-            end /* else if (numero == sorteio2) begin
-              current_state <= ACERTOU_TRES;
-            end else if (numero == sorteio1) begin
-              current_state <= ACERTOU_DOIS;
-            end else if (numero == sorteio0) begin
-              current_state <= ACERTOU_UM;
-            end else if (numero == last_sorted_number) begin
-              current_state <= ACERTOU_TRES_CONSECUTIVOS;
-            end*/ else begin
+              current_state <= IDLE;
+            end else begin
               current_state <= IDLE;
             end 
             rodadas_count <= rodadas_count + 2'b01;
           end
-        /*
-        ACERTOU_QUATRO:
-          if (insere) begin
-            if (numero == sorteio4) begin
-              current_state <= ACERTOU_QUATRO_CONSECUTIVOS;
-            end else if (numero == sorteio3) begin
-              current_state <= ACERTOU_TRES_CONSECUTIVOS;
-            end else if (numero == sorteio2) begin
-              current_state <= ACERTOU_TRES;
-            end else if (numero == sorteio1) begin
-              current_state <= ACERTOU_DOIS;
-            end else if (numero == sorteio0) begin
-              current_state <= ACERTOU_UM;
-            end else begin
-              current_state <= IDLE;
-            end
-          end
-        */
+        
         ACERTOU_DOIS_CONSECUTIVOS:
           if (insere) begin
-            if (numero == sorteio3) begin
-              current_state <= ACERTOU_TRES_CONSECUTIVOS;
-            end else if (numero == sorteio2) begin
-              current_state <= ACERTOU_TRES;
-            end else if (numero == sorteio1) begin
-              current_state <= ACERTOU_DOIS;
-            end else if (numero == sorteio0) begin
-              current_state <= ACERTOU_UM;
-            end else begin
-              current_state <= IDLE;
+            if (numero == sorteio4) begin
+              // logica da vitoria do premio 2
+              p2_count <= p2_count + 5'b00001;
+              premio_count <= 2'b10;
             end
           end
         ACERTOU_TRES_CONSECUTIVOS:
           if (insere) begin
             if (numero == sorteio4) begin
-              current_state <= ACERTOU_QUATRO_CONSECUTIVOS;
-            end else if (numero == sorteio3) begin
-              current_state <= ACERTOU_TRES_CONSECUTIVOS;
-            end else if (numero == sorteio2) begin
-              current_state <= ACERTOU_TRES;
-            end else if (numero == sorteio1) begin
-              current_state <= ACERTOU_DOIS;
-            end else if (numero == sorteio0) begin
-              current_state <= ACERTOU_UM;
+              // logica da vitoria do premio 1
+              p1_count <= p1_count + 5'b00001;
+              premio_count <= 2'b01;
             end else begin
-              current_state <= IDLE;
+              // acertou tres consecutivos mas nao acertou o ultimo
+              p2_count <= p2_count + 5'b00001;
+              premio_count <= 2'b10;
             end
           end
         ACERTOU_QUATRO_CONSECUTIVOS:
           if (insere) begin
-            p1_count <= p1_count + 1;
-            current_state <= IDLE;
+            // logica da vitoria do premio 1
+            p1_count <= p1_count + 5'b00001;
+            premio_count <= 2'b01;
+            //current_state <= IDLE;
           end
-
-// ...
-
+          
       endcase
-      last_sorted_number <= (current_state == IDLE) ? 4'b0000 : numero;
     end
   end
 
   // Lógica de contagem de prêmios
   always @(posedge clock or posedge fim_jogo) begin
     if (fim_jogo) begin
+      /*
       case (current_state)
         ACERTOU_QUATRO_CONSECUTIVOS:
           p1_count <= p1_count + 1;
@@ -179,16 +145,8 @@ module Loteria (
           p2_count <= p2_count + 1;
       endcase
       premio_count <= (current_state == ACERTOU_QUATRO_CONSECUTIVOS) ? 2'b01 : 2'b10;
+      */
     end
-  end
-
-  // Conversão do número de matrícula para binário de 4 bits
-  always @* begin
-    sorteio0 = 4'b0101;
-    sorteio1 = 4'b0011;
-    sorteio2 = 4'b1000;
-    sorteio3 = 4'b0010;
-    sorteio4 = 4'b0000;
   end
 
   // Saídas

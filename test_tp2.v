@@ -38,23 +38,23 @@ module Loteria_tb;
     $dumpvars(0, Loteria_tb);
 
     clock = 0;
-    reset = 1;
-    numero = 0;
-    fim = 0;
-    fim_jogo = 0;
-    insere = 0;
-    #2 reset = 0;
+    reset = 1'b1;
+    numero = 4'b0000;
+    fim = 1'b0;
+    fim_jogo = 1'b0;
+    insere = 1'b0;
+    #2 reset = 1'b0;
 
     // Jogo 1
-    insere = 1;
-    numero = 1;
-    #2 numero = 2;
-    #2 numero = 3;
-    #2 numero = 4;
-    #2 numero = 5;
-    insere = 0;
-    fim_jogo = 1;
-    #2 fim_jogo = 0;
+    insere = 1'b1;
+    numero = 4'b0101;
+    #2 numero = 4'b0011;
+    #2 numero = 4'b1000;
+    #2 numero = 4'b0010;
+    #2 numero = 4'b0000;
+    insere = 1'b0;
+    fim_jogo = 1'b1;
+    #2 fim_jogo = 1'b0;
 
     // Verificação
     #10 $display("Teste 1 - Não ganhou nenhum prêmio");
@@ -70,23 +70,23 @@ module Loteria_tb;
     $dumpvars(0, Loteria_tb);
 
     clock = 0;
-    reset = 1;
-    numero = 0;
-    fim = 0;
-    fim_jogo = 0;
-    insere = 0;
-    #2 reset = 0;
+    reset = 1'b1;
+    numero = 4'b0000;
+    fim = 1'b0;
+    fim_jogo = 1'b0;
+    insere = 1'b0;
+    #2 reset = 1'b0;
 
     // Jogo 2
-    insere = 1;
-    numero = 3;
-    #2 numero = 8;
-    #2 numero = 6;
-    #2 numero = 9;
-    #2 numero = 1;
-    insere = 0;
-    fim_jogo = 1;
-    #2 fim_jogo = 0;
+    insere = 1'b1;
+    numero = 4'b0011;
+    #2 numero = 4'b1000;
+    #2 numero = 4'b0110;
+    #2 numero = 4'b1001;
+    #2 numero = 4'b0001;
+    insere = 1'b0;
+    fim_jogo = 1'b1;
+    #2 fim_jogo = 1'b0;
 
     // Verificação
     #10 $display("Teste 2 - Ganhou o prêmio 1");
@@ -102,23 +102,23 @@ module Loteria_tb;
     $dumpvars(0, Loteria_tb);
 
     clock = 0;
-    reset = 1;
-    numero = 0;
-    fim = 0;
-    fim_jogo = 0;
-    insere = 0;
-    #2 reset = 0;
+    reset = 1'b1;
+    numero = 4'b0000;
+    fim = 1'b0;
+    fim_jogo = 1'b0;
+    insere = 1'b0;
+    #2 reset = 1'b0;
 
     // Jogo 3
-    insere = 1;
-    numero = 3;
-    #2 numero = 8;
-    #2 numero = 6;
-    #2 numero = 2;
-    #2 numero = 1;
-    insere = 0;
-    fim_jogo = 1;
-    #2 fim_jogo = 0;
+    insere = 1'b1;
+    numero = 4'b0011;
+    #2 numero = 4'b1000;
+    #2 numero = 4'b0110;
+    #2 numero = 4'b0010;
+    #2 numero = 4'b0000;
+    insere = 1'b0;
+    fim_jogo = 1'b1;
+    #2 fim_jogo = 1'b0;
 
     // Verificação
     #10 $display("Teste 3 - Ganhou o prêmio 2");

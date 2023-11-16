@@ -1,19 +1,25 @@
-`timescale 1ns / 1ps
+`timescale 1ns/1ps
 
-module Testbench;
+module Loteria_tb;
 
+  // Parâmetros
+  parameter CLK_PERIOD = 10; // Período do clock em unidades de tempo
+  
+  // Sinais de Entrada
   reg clock;
   reg [3:0] numero;
   reg reset;
   reg fim;
   reg fim_jogo;
   reg insere;
+
+  // Sinais de Saída
   wire [1:0] premio;
   wire [4:0] p1;
   wire [4:0] p2;
 
   // Instanciando o módulo Loteria
-  Loteria loteria (
+  Loteria uut (
     .clock(clock),
     .numero(numero),
     .reset(reset),
@@ -25,48 +31,38 @@ module Testbench;
     .p2(p2)
   );
 
-  // Gerando um sinal de clock
-  always begin
-    #5 clock = ~clock;
+  // Inicialização do clock
+  initial begin
+    clock = 0;
+    forever #((CLK_PERIOD)/2) clock = ~clock;
   end
 
-  // Testando o módulo Loteria
+  // Geração de Estímulos
   initial begin
     // Inicializando as entradas
     reset = 1;
+    numero = 4'b0000;
     fim = 0;
     fim_jogo = 0;
     insere = 0;
-    numero = 4'b0000;
 
-    // Aplicando a sequência de teste
+    // Aguardando alguns ciclos
     #10 reset = 0;
-    #10 insere = 1; numero = 4'b0000;
-    #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 insere = 1; numero = 4'b0000;
-    #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 insere = 1; numero = 4'b0000;
-    #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 insere = 1; numero = 4'b0000;
-    #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 insere = 0; numero = 4'b0000;
-    #10 fim_jogo = 1;
-    #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 fim_jogo = 0;
-    #10 insere = 1; numero = 4'b0101;
-    #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 insere = 1; numero = 4'b0110;
-    #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 insere = 1; numero = 4'b0111;
-    #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 insere = 1; numero = 4'b1000;
-    #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
-    #10 insere = 0; numero = 4'b0000;
-    #10 fim_jogo = 1;
-    #10 $display("premio: %d, p1: %d, p2: %d", premio, p1, p2);
 
-    // Terminando a simulação
-    #10 $finish;
+    // Teste 1: Insere número e verifica prêmio
+    insere = 1;
+    #10 numero = 4'b0101; // Número sorteado para ACERTOU_UM
+    #10 numero = 4'b0011; // Número sorteado para ACERTOU_DOIS
+    #10 numero = 4'b1000; // Número sorteado para ACERTOU_TRES
+    #10 numero = 4'b0010; // Número sorteado para ACERTOU_QUATRO
+    #10 numero = 4'b0000; // Número sorteado para ACERTOU_TRES_CONSECUTIVOS
+    #10 insere = 0;
+    #10 $display("Resultado: premio=%b, p1=%b, p2=%b", premio, p1, p2);
+    // Teste 2: Fim de Jogo
+    #10 fim_jogo = 1;
+    #10 $display("Resultado: premio=%b, p1=%b, p2=%b", premio, p1, p2);
+    // Aguardando o final da simulação
+    #100 $finish;
   end
 
 endmodule

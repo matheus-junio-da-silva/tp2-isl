@@ -6,3 +6,5 @@ PS C:\iverilog> vvp .\a.out
 iverilog tp2/tp2.v tp2/test_tp2.v
 
 voce poderia mudar a forma em que o codigo verifica se os numeros acertados consecuticamente, de uma forma correta e de facil compreensao, pois da forma que esta implementado atualmente eu acho que esta errado, e falta tambem verificar de dois numeros foram acertados consecutivamente, a forma certa é verificar as variaveis sorteio e o input numero, ex: sorteio0 = 4'b0101  numero = 4'b0101 e sorteio1 = 4'b0011 numero = 4'b0011 , entao temos dois acertos consecutivos, isso só é valido seguindo a ordem, ex: mesmo que o usuario acerte 4 numeros, nao é garantido que ele tem 4 acertos consecutivos, pois se o 2 segundo, terceiro ou quarto numeros inputados forem diferentes dos seus respectivos sorteios, entao nao vai ser consecutivo
+
+faça um testebench e imprima na tela os resultados
