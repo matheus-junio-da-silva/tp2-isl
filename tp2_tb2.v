@@ -42,7 +42,7 @@ module tb_loteria;
     #20 insere = 1; numero = 4'b0000; // Insere número
 
     #10 insere = 0; // Finaliza a inserção
-
+    fim_jogo = 1; // Finaliza o jogo
     // Aguarde alguns ciclos para observar os resultados
     #100;
 
