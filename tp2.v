@@ -32,7 +32,7 @@ module Loteria (
   reg [4:0] p2_count;
   //reg [3:0] last_sorted_number;
   reg [1:0] consecutivos_count;
-  reg [1:0] rodadas_count;
+  reg [2:0] rodadas_count;
 
   // Inicialização
   always @(posedge clock or posedge reset) begin
@@ -50,7 +50,8 @@ module Loteria (
       case (current_state) // current_state = 3'b000
         IDLE:
           if (insere) begin // insere == 1
-            if (rodadas_count == 2'b11) begin
+            if (rodadas_count == 3'b100) begin // gambiarra para nao contar a ultima rodada
+              $display("Entrou aqui oi");
               case (consecutivos_count) // pode ser que seja necessario subtrair 1 de consecutivos_count
                 2'b01: begin
                   if (1) begin
@@ -74,6 +75,7 @@ module Loteria (
                   
                   //$display("Entrou aqui 2");
                 end 
+
                 default:
                   current_state <= IDLE;
               endcase
@@ -88,6 +90,7 @@ module Loteria (
               if (rodadas_count != 2'b11) begin
               rodadas_count <= rodadas_count + 2'b01;
               $display("Entrou aqui 01");
+              $display("Valor de rodadas_count: %b", rodadas_count);
               end
               current_state <= IDLE;
               $display("Entrou aqui 6");
@@ -133,15 +136,21 @@ module Loteria (
               current_state <= IDLE;
               $display("Entrou aqui 9");
               rodadas_count <= rodadas_count + 2'b01;
+              $display("Valor de rodadas_count: %b", rodadas_count);
+              // o valor desse diplay nao esta atualizado com o valor atribuido aqui, demora um tempo para atualizar
+              $display("Valor de consecutivos_count: %b", consecutivos_count);
+
             end else begin
               current_state <= IDLE;
               $display("Entrou aqui 14");
             end 
             //rodadas_count <= rodadas_count + 2'b01;
           end
-        
+
+        // nao da para colocar esse caso aqui porque o always esta sensivel a clock
+        /*
         ACERTOU_DOIS_CONSECUTIVOS:
-          if (insere) begin
+          begin
             if (numero == sorteio4) begin
               // logica da vitoria do premio 2
               p2_count <= p2_count + 5'b00001;
@@ -150,7 +159,7 @@ module Loteria (
             end
           end
         ACERTOU_TRES_CONSECUTIVOS:
-          if (insere) begin
+          begin
             if (numero == sorteio4) begin
               // logica da vitoria do premio 1
               p1_count <= p1_count + 5'b00001;
@@ -163,42 +172,74 @@ module Loteria (
             end
           end
         ACERTOU_QUATRO_CONSECUTIVOS:
-          if (insere) begin
+          //if (insere) begin
+          begin
             // logica da vitoria do premio 1
             p1_count <= p1_count + 5'b00001;
             premio_count <= 2'b01;
             //current_state <= IDLE;
             $display("Entrou aqui 11");
           end
-          
+        */
       endcase
     end
   end
 
   // Lógica de contagem de prêmios
-  always @(posedge clock or posedge fim_jogo) begin
+  //always @(posedge clock or posedge fim_jogo) begin
+  always @(posedge fim_jogo) begin
     if (fim_jogo) begin
 
       case (current_state)
+        ACERTOU_DOIS_CONSECUTIVOS:
+          begin
+            if (numero == sorteio4) begin
+              // logica da vitoria do premio 2
+              p2_count <= p2_count + 5'b00001;
+              premio_count <= 2'b10;
+              $display("Entrou aqui 9");
+            end
+          end
+        ACERTOU_TRES_CONSECUTIVOS:
+          begin
+            if (numero == sorteio4) begin
+              // logica da vitoria do premio 1
+              p1_count <= p1_count + 5'b00001;
+              premio_count <= 2'b01;
+              $display("Entrou aqui 10");
+            end else begin
+              // acertou tres consecutivos mas nao acertou o ultimo
+              p2_count <= p2_count + 5'b00001;
+              premio_count <= 2'b10;
+            end
+          end
+        ACERTOU_QUATRO_CONSECUTIVOS:
+          //if (insere) begin
+          begin
+            // logica da vitoria do premio 1
+            p1_count <= p1_count + 5'b00001;
+            premio_count <= 2'b01;
+            //current_state <= IDLE;
+            $display("Entrou aqui 11");
+          end
+
+
+        /*
         ACERTOU_QUATRO_CONSECUTIVOS: begin
           premio_count <= 2'b01;
           if (1) begin
+            $display("Valor de premio_count: %b", premio_count);
             $display("Entrou aqui 12");
+            
           end
         
           //$display("Entrou aqui 12");
         end
+        */
+        default:
+          premio_count <= 2'b00;
       endcase
-    
-      /*
-      case (current_state)
-        ACERTOU_QUATRO_CONSECUTIVOS:
-          p1_count <= p1_count + 1;
-        ACERTOU_DOIS_CONSECUTIVOS, ACERTOU_TRES_CONSECUTIVOS:
-          p2_count <= p2_count + 1;
-      endcase
-      premio_count <= (current_state == ACERTOU_QUATRO_CONSECUTIVOS) ? 2'b01 : 2'b10;
-      */
+      $display("Entrou aqui 0012");
     end
   end
 

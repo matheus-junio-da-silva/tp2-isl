@@ -51,16 +51,16 @@ module Loteria_tb;
 
     // Teste 1: Insere número e verifica prêmio
     insere = 1;
-    #10 numero = 4'b0101; // Número sorteado para ACERTOU_UM
+    numero = 4'b0101; // Número sorteado para ACERTOU_UM
     #10 numero = 4'b0011; // Número sorteado para ACERTOU_DOIS
     #10 numero = 4'b1000; // Número sorteado para ACERTOU_TRES
     #10 numero = 4'b0010; // Número sorteado para ACERTOU_QUATRO
     #10 numero = 4'b0000; // Número sorteado para ACERTOU_TRES_CONSECUTIVOS
     #10 insere = 0;
-    #10 $display("Resultado: premio=%b, p1=%b, p2=%b", premio, p1, p2);
-    // Teste 2: Fim de Jogo
-    #10 fim_jogo = 1;
-    #10 $display("Resultado: premio=%b, p1=%b, p2=%b", premio, p1, p2);
+    //#10 $display("Resultado: premio=%b, p1=%b, p2=%b", premio, p1, p2);
+    // Teste 2: Fim de Jogo, mas apenas de 1 jogo
+    fim_jogo = 1;
+    #100 $display("Resultado: premio=%b, p1=%b, p2=%b", premio, p1, p2);
     // Aguardando o final da simulação
     #100 $finish;
   end
