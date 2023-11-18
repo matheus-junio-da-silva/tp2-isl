@@ -95,12 +95,7 @@ module Loteria (
               current_state <= IDLE;
               $display("Entrou aqui 6");
             end
-            /*
-            if (rodadas_count != 2'b11) begin
-              rodadas_count <= rodadas_count + 2'b01;
-              $display("Entrou aqui 1");
-            end   
-            */
+            
           end
         ACERTOU_UM:
           if (insere) begin
@@ -147,40 +142,7 @@ module Loteria (
             //rodadas_count <= rodadas_count + 2'b01;
           end
 
-        // nao da para colocar esse caso aqui porque o always esta sensivel a clock
-        /*
-        ACERTOU_DOIS_CONSECUTIVOS:
-          begin
-            if (numero == sorteio4) begin
-              // logica da vitoria do premio 2
-              p2_count <= p2_count + 5'b00001;
-              premio_count <= 2'b10;
-              $display("Entrou aqui 9");
-            end
-          end
-        ACERTOU_TRES_CONSECUTIVOS:
-          begin
-            if (numero == sorteio4) begin
-              // logica da vitoria do premio 1
-              p1_count <= p1_count + 5'b00001;
-              premio_count <= 2'b01;
-              $display("Entrou aqui 10");
-            end else begin
-              // acertou tres consecutivos mas nao acertou o ultimo
-              p2_count <= p2_count + 5'b00001;
-              premio_count <= 2'b10;
-            end
-          end
-        ACERTOU_QUATRO_CONSECUTIVOS:
-          //if (insere) begin
-          begin
-            // logica da vitoria do premio 1
-            p1_count <= p1_count + 5'b00001;
-            premio_count <= 2'b01;
-            //current_state <= IDLE;
-            $display("Entrou aqui 11");
-          end
-        */
+        
       endcase
     end
   end
@@ -223,19 +185,6 @@ module Loteria (
             $display("Entrou aqui 11");
           end
 
-
-        /*
-        ACERTOU_QUATRO_CONSECUTIVOS: begin
-          premio_count <= 2'b01;
-          if (1) begin
-            $display("Valor de premio_count: %b", premio_count);
-            $display("Entrou aqui 12");
-            
-          end
-        
-          //$display("Entrou aqui 12");
-        end
-        */
         default:
           premio_count <= 2'b00;
       endcase
