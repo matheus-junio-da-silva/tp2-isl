@@ -54,7 +54,7 @@ module Loteria_tb;
     numero = 4'b0101; // Número sorteado para ACERTOU_UM
     #10 numero = 4'b0011; // Número sorteado para ACERTOU_DOIS
     #10 numero = 4'b1000; // Número sorteado para ACERTOU_TRES
-    #10 numero = 4'b0010; // Número sorteado para ACERTOU_QUATRO
+    #10 numero = 4'b0001; // Número sorteado para ACERTOU_QUATRO
     #10 numero = 4'b0000; // Número sorteado para ACERTOU_TRES_CONSECUTIVOS
     #10 insere = 0;
     //#10 $display("Resultado: premio=%b, p1=%b, p2=%b", premio, p1, p2);
@@ -63,6 +63,8 @@ module Loteria_tb;
     #100 $display("Resultado: premio=%b, p1=%b, p2=%b", premio, p1, p2);
     // Aguardando o final da simulação
     #100 $finish;
+    //#100000; // Aguardar um número suficiente de ciclos para exibir mensagens
+    //$stop; // Parar a simulação
   end
 
 endmodule
