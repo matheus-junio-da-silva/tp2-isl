@@ -2,7 +2,9 @@ configurar fim_jogo para identificar outro jogo.
 
 Sinal de controle que apresenta todas as saídas implementadas, reseta a máquina e finaliza a identificação dos jogos
 
+variavel de controle para permitir adição do numero
+
 ok- testar outra formas de vitoria, sem ser a quatro_consecutivas, duas_consecutivas
 
-fazer com que a verificacao com os numeros dos sorteios sejam dinamicos
+ok- fazer com que a verificacao com os numeros dos sorteios sejam dinamicos
 

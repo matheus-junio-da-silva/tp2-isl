@@ -59,7 +59,7 @@ module Loteria_tb;
     #20 insere = 0;
     //#10 $display("Resultado: premio=%b, p1=%b, p2=%b", premio, p1, p2);
     // Teste 2: Fim de Jogo, mas apenas de 1 jogo
-    fim_jogo = 1;
+    #100 fim_jogo = 1;
     #100 $display("Resultado: premio=%b, p1=%b, p2=%b", premio, p1, p2);
     // Aguardando o final da simulação
     #100 $finish;
