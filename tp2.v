@@ -4,6 +4,7 @@ module Loteria (
   input wire reset,
   input wire fim,
   input wire fim_jogo,
+  input wire novo_jogo,
   input wire insere,
   output wire [1:0] premio,
   output wire [4:0] p1,
@@ -35,8 +36,7 @@ module Loteria (
   reg [1:0] consecutivos_count;
   reg [2:0] rodadas_count;
   reg sorteio_concluido;
-  reg novo_jogo = 1;
-  reg novo_jogo_temp;
+
   // Inicialização
   always @(posedge clock or posedge reset or posedge novo_jogo) begin
     if (reset || novo_jogo) begin
@@ -48,8 +48,7 @@ module Loteria (
       rodadas_count <= 3'b000;
       sorteio_atual <= 4'b0101;
       sorteio_concluido <= 1'b0;
-      novo_jogo <= 0;
-      novo_jogo_temp <= 0;
+    
       $display("Entrou aqui");
       //last_sorted_number <= 4'b0000;
     end else begin
@@ -262,7 +261,7 @@ module Loteria (
         default:
           premio_count <= 2'b00;
       endcase
-      novo_jogo_temp <= 1;
+      
       $display("Entrou aqui 0012");
       $display("Valor de rodadas_count: %b", rodadas_count);
     end
@@ -272,9 +271,5 @@ module Loteria (
   assign premio = premio_count;
   assign p1 = p1_count;
   assign p2 = p2_count;
-  
-  always @(posedge novo_jogo_temp) begin
-    novo_jogo <= 1; // Sinaliza novo jogo após o fim do jogo
-  end
 
 endmodule
