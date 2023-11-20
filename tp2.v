@@ -27,13 +27,14 @@ module Loteria (
   reg [2:0] current_state;
   // sorteio = 53820
   reg [4:0] sorteio0 = 4'b0101, sorteio1 = 4'b0011, sorteio2 = 4'b1000, sorteio3 = 4'b0010, sorteio4 = 4'b0000; // número de matrícula em binário de 4 bits
+  reg [4:0] sorteio_atual;
   reg [1:0] premio_count;
   reg [4:0] p1_count;
   reg [4:0] p2_count;
   //reg [3:0] last_sorted_number;
   reg [1:0] consecutivos_count;
   reg [2:0] rodadas_count;
-
+  reg sorteio_concluido;
   // Inicialização
   always @(posedge clock or posedge reset) begin
     if (reset) begin
@@ -42,7 +43,9 @@ module Loteria (
       p1_count <= 5'b00000;
       p2_count <= 5'b00000;
       consecutivos_count <= 2'b00;
-      rodadas_count <= 2'b00;
+      rodadas_count <= 3'b000;
+      sorteio_atual <= 4'b0101;
+      sorteio_concluido <= 1'b0;
       $display("Entrou aqui");
       //last_sorted_number <= 4'b0000;
     end else begin
@@ -50,6 +53,25 @@ module Loteria (
       case (current_state) // current_state = 3'b000
         IDLE:
           if (insere) begin // insere == 1
+            // Lógica para definir sorteio_atual
+            if (rodadas_count == 3'b000) begin
+              sorteio_atual = 4'b0101; // sorteio0;
+              sorteio_concluido <= 1'b1;
+            end else if (rodadas_count == 3'b001) begin
+              sorteio_atual = 4'b0011; // sorteio1;
+              sorteio_concluido <= 1'b1;
+            end else if (rodadas_count == 3'b010) begin
+              sorteio_atual = 4'b1000; // sorteio2;
+              sorteio_concluido <= 1'b1;
+            end else if (rodadas_count == 3'b011) begin
+              sorteio_atual = 4'b0010; // sorteio3;
+              sorteio_concluido <= 1'b1;
+            end
+
+            if(rodadas_count == 3'b101) begin // gambiarra para subtrair um rodada
+              rodadas_count = 3'b100;
+            end
+
             if (rodadas_count == 3'b100) begin // gambiarra para nao contar a ultima rodada
               $display("Entrou aqui oi");
               if (consecutivos_count == 2'b01) begin
@@ -69,9 +91,11 @@ module Loteria (
                 $display("Entrou aqui 2");
               end
               else begin
-                current_state <= IDLE;
+                //current_state <= IDLE;
               end
-            end else if (numero == sorteio0) begin
+            end else if (numero == sorteio_atual) begin
+              $display("Valor de sorteio_atual: %b", sorteio_atual);
+
               if (rodadas_count != 3'b100) begin
               rodadas_count <= rodadas_count + 2'b01;
               $display("Entrou aqui 1");
@@ -85,6 +109,7 @@ module Loteria (
               $display("Entrou aqui 01");
               $display("Valor de rodadas_count: %b", rodadas_count);
               end
+              $display("Valor de sorteio_atual: %b", sorteio_atual);
               current_state <= IDLE;
               $display("Entrou aqui 6");
               $display("Valor de rodadas_count: %b", rodadas_count);
@@ -93,7 +118,20 @@ module Loteria (
           end
         ACERTOU_UM:
           if (insere) begin
-            if (numero == sorteio1) begin
+
+            if (rodadas_count == 3'b000) begin
+              sorteio_atual = 4'b0101; // sorteio0;
+            end else if (rodadas_count == 3'b001) begin
+              sorteio_atual = 4'b0011; // sorteio1;
+            end else if (rodadas_count == 3'b010) begin
+              sorteio_atual = 4'b1000; // sorteio2;
+            end else if (rodadas_count == 3'b011) begin
+              sorteio_atual = 4'b0010; // sorteio3;
+            end
+
+            if (numero == sorteio_atual) begin
+              $display("Valor de sorteio_atual: %b", sorteio_atual);
+
               current_state <= ACERTOU_DOIS;
               consecutivos_count <= 2'b01;
               $display("Entrou aqui 7");
@@ -103,13 +141,26 @@ module Loteria (
             end else begin
               current_state <= IDLE;
               $display("Entrou aqui 15");
-              
+              rodadas_count <= rodadas_count + 2'b01;
             end
             
           end
         ACERTOU_DOIS:
           if (insere) begin
-            if (numero == sorteio2) begin
+            
+            if (rodadas_count == 3'b000) begin
+              sorteio_atual = 4'b0101; // sorteio0;
+            end else if (rodadas_count == 3'b001) begin
+              sorteio_atual = 4'b0011; // sorteio1;
+            end else if (rodadas_count == 3'b010) begin
+              sorteio_atual = 4'b1000; // sorteio2;
+            end else if (rodadas_count == 3'b011) begin
+              sorteio_atual = 4'b0010; // sorteio3;
+            end
+
+            if (numero == sorteio_atual) begin
+              $display("Valor de sorteio_atual: %b", sorteio_atual);
+
               current_state <= ACERTOU_TRES;
               consecutivos_count <= 2'b10;
               $display("Entrou aqui 8");
@@ -120,13 +171,30 @@ module Loteria (
               current_state <= IDLE;
               $display("Entrou aqui 13");
               $display("Valor de consecutivos_count: %b", consecutivos_count);
+              if (rodadas_count != 3'b100) begin
               rodadas_count <= rodadas_count + 2'b01;
+              $display("Entrou aqui 133");
+              end
+              $display("Valor de rodadas_count: %b", rodadas_count);
             end
             //rodadas_count <= rodadas_count + 2'b01;
           end
         ACERTOU_TRES:
           if (insere) begin
-            if (numero == sorteio3) begin
+
+            if (rodadas_count == 3'b000) begin
+              sorteio_atual = 4'b0101; // sorteio0;
+            end else if (rodadas_count == 3'b001) begin
+              sorteio_atual = 4'b0011; // sorteio1;
+            end else if (rodadas_count == 3'b010) begin
+              sorteio_atual = 4'b1000; // sorteio2;
+            end else if (rodadas_count == 3'b011) begin
+              sorteio_atual = 4'b0010; // sorteio3;
+            end
+
+            if (numero == sorteio_atual) begin
+              $display("Valor de sorteio_atual: %b", sorteio_atual);
+
               consecutivos_count <= 2'b11;
               current_state <= IDLE;
               $display("Entrou aqui 9");
