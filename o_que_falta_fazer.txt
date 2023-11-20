@@ -1,4 +1,4 @@
-configurar fim_jogo para identificar outro jogo.
+okk- configurar fim_jogo para identificar outro jogo.
 
 Sinal de controle que apresenta todas as saídas implementadas, reseta a máquina e finaliza a identificação dos jogos
 

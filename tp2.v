@@ -272,4 +272,21 @@ module Loteria (
   assign p1 = p1_count;
   assign p2 = p2_count;
 
+  always @(posedge fim) begin
+    if (fim) begin
+      current_state <= IDLE;
+      premio_count <= 2'b00;
+      p1_count <= 5'b00000;
+      p2_count <= 5'b00000;
+      consecutivos_count <= 2'b00;
+      rodadas_count <= 3'b000;
+      sorteio_atual <= 4'b0101;
+      sorteio_concluido <= 1'b0;
+    
+      $display("Entrou aqui");
+      //last_sorted_number <= 4'b0000;
+    end
+
+  end
+
 endmodule
